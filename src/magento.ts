@@ -11,7 +11,7 @@ import {
   FargatePlatformVersion,
   FargateService,
   FargateTaskDefinition,
-  ICluster,
+  ICluster
 } from '@aws-cdk/aws-ecs';
 import { AccessPoint, FileSystem } from '@aws-cdk/aws-efs';
 import { ApplicationLoadBalancer } from '@aws-cdk/aws-elasticloadbalancingv2';
@@ -142,6 +142,13 @@ export interface MagentoServiceProps {
    ** @default none
    */
   readonly mainStackALB?: ApplicationLoadBalancer;
+
+  /*
+   ** Elasticache Redis Endpoint Address
+   ** @default none
+   */
+
+  readonly cacheEndpoint? : String;
 }
 
 /*
@@ -250,25 +257,22 @@ export class MagentoService extends Construct {
       MAGENTO_DEPLOY_STATIC_CONTENT: props.magentoAdminTask ? 'yes' : 'no',
       MAGENTO_SKIP_REINDEX: props.magentoAdminTask ? 'no' : 'yes',
       MAGENTO_SKIP_BOOTSTRAP: props.magentoAdminTask ? 'no' : 'yes',
-
+      MAGENTO_EXTRA_INSTALL_ARGS: `--cache-backend=redis --cache-backend-redis-server=${props.cacheEndpoint} --cache-backend-redis-port=6379 --cache-backend-redis-db=0 --session-save=redis --session-save-redis-host=${props.cacheEndpoint} --session-save-redis-db=2`,
       MAGENTO_HOST: this!.hostName,
       MAGENTO_ENABLE_HTTPS: r53DomainZone ? 'yes' : 'no',
       MAGENTO_ENABLE_ADMIN_HTTPS: r53DomainZone ? 'yes' : 'no',
       MAGENTO_MODE: 'production',
       MAGENTO_USE_EFS: props.useEFS ? 'yes': 'no',
-
       MAGENTO_DATABASE_HOST: props.db.clusterEndpoint.hostname,
       MAGENTO_DATABASE_PORT_NUMBER: '3306',
       MAGENTO_DATABASE_USER: props.dbUser,
       MAGENTO_DATABASE_NAME: props.dbName,
-
       ELASTICSEARCH_HOST: props.osDomain.domainEndpoint,
       ELASTICSEARCH_PORT_NUMBER: '443',
       MAGENTO_ELASTICSEARCH_USE_HTTPS: 'yes',
       MAGENTO_ELASTICSEARCH_ENABLE_AUTH: 'yes',
       MAGENTO_ELASTICSEARCH_USER: props.osUser,
-
-      PHP_MEMORY_LIMIT: '2G',
+      PHP_MEMORY_LIMIT: '4G',
     };
     const magentoMarketplaceSecrets = secretsmanager.Secret.fromSecretNameV2(
       this,
@@ -289,7 +293,7 @@ export class MagentoService extends Construct {
     var containerDef: ContainerDefinitionOptions = {
       containerName: 'magento',
       image: props.magentoImage,
-      command: (props.magentoAdminTask == true && props.magentoAdminTaskDebug)? ['tail', '-f', '/dev/null'] : undefined,
+      // command: (props.magentoAdminTask == true && props.magentoAdminTaskDebug)? ['tail', '-f', '/dev/null'] : undefined,
       logging: new AwsLogDriver({ streamPrefix: 'magento', mode: AwsLogDriverMode.NON_BLOCKING }),
       environment: magentoEnvs,
       secrets: magentoSecrets,
@@ -300,6 +304,7 @@ export class MagentoService extends Construct {
     container.addPortMappings({
       containerPort: 8080,
     });
+    // TODO - The best way to handle this by having /bitnami/magento/var/pub/media mount
     if (props.useEFS) {
       container.addMountPoints({
         readOnly: false,

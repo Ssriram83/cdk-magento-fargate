@@ -27,6 +27,7 @@ const project = new AwsCdkTypeScriptApp({
     '@aws-cdk/aws-servicediscovery',
     '@aws-cdk/aws-route53-targets',
     '@aws-cdk/aws-secretsmanager',
+    '@aws-cdk/aws-elasticache',
     '@aws-cdk/cx-api',
   ],
 

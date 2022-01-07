@@ -1,18 +1,15 @@
 FROM bitnami/magento
-LABEL maintainer "Bitnami <containers@bitnami.com>"
 
-## Install 'vim'
-#RUN install_packages vim.p
-
+WORKDIR /opt/bitnami/magento
 
 USER root
+
 RUN chown -R daemon:daemon /opt/bitnami/
 RUN chown -R daemon:daemon /bitnami/magento
 
-COPY setup.sh /
-#Custom Entrypoint to update Magento Host
-COPY entrypoint.sh /opt/bitnami/scripts/magento/
-## Enable mod_ratelimit module
-#RUN sed -i -r 's/#LoadModule ratelimit_module/LoadModule ratelimit_module/' /opt/bitnami/apache/conf/httpd.conf
-
 USER daemon
+
+COPY scripts/post-init /docker-entrypoint-init.d/
+
+ENTRYPOINT [ "/opt/bitnami/scripts/magento/entrypoint.sh" ]
+CMD [ "/opt/bitnami/scripts/magento/run.sh" ]

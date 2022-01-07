@@ -3,6 +3,14 @@
 exports[`For Mandatory Infra Constructs have been created Without EFS 1`] = `
 Object {
   "Outputs": Object {
+    "CacheEndpoint": Object {
+      "Value": Object {
+        "Fn::GetAtt": Array [
+          "RedisCluster",
+          "RedisEndpoint.Address",
+        ],
+      },
+    },
     "ClusterName": Object {
       "Value": Object {
         "Ref": "ClusterEB0386A7",
@@ -91,18 +99,6 @@ Object {
     },
   },
   "Parameters": Object {
-    "AssetParameters11d371859e49f3b1a49896583254890801a40beada56e4c84409a179a221e2e2ArtifactHashF319B5BD": Object {
-      "Description": "Artifact hash for asset \\"11d371859e49f3b1a49896583254890801a40beada56e4c84409a179a221e2e2\\"",
-      "Type": "String",
-    },
-    "AssetParameters11d371859e49f3b1a49896583254890801a40beada56e4c84409a179a221e2e2S3Bucket04AFB68D": Object {
-      "Description": "S3 bucket for asset \\"11d371859e49f3b1a49896583254890801a40beada56e4c84409a179a221e2e2\\"",
-      "Type": "String",
-    },
-    "AssetParameters11d371859e49f3b1a49896583254890801a40beada56e4c84409a179a221e2e2S3VersionKeyC247374B": Object {
-      "Description": "S3 key for asset version \\"11d371859e49f3b1a49896583254890801a40beada56e4c84409a179a221e2e2\\"",
-      "Type": "String",
-    },
     "AssetParameters1f7e277bd526ebce1983fa1e7a84a5281ec533d9187caaebb773681bbf7bf4c1ArtifactHash0128B949": Object {
       "Description": "Artifact hash for asset \\"1f7e277bd526ebce1983fa1e7a84a5281ec533d9187caaebb773681bbf7bf4c1\\"",
       "Type": "String",
@@ -113,6 +109,18 @@ Object {
     },
     "AssetParameters1f7e277bd526ebce1983fa1e7a84a5281ec533d9187caaebb773681bbf7bf4c1S3VersionKeyD0A0B57A": Object {
       "Description": "S3 key for asset version \\"1f7e277bd526ebce1983fa1e7a84a5281ec533d9187caaebb773681bbf7bf4c1\\"",
+      "Type": "String",
+    },
+    "AssetParameters70893b631249dc61260989e92e90d60ae94fbbec490a1e065680d77383084d8dArtifactHash6BDDF757": Object {
+      "Description": "Artifact hash for asset \\"70893b631249dc61260989e92e90d60ae94fbbec490a1e065680d77383084d8d\\"",
+      "Type": "String",
+    },
+    "AssetParameters70893b631249dc61260989e92e90d60ae94fbbec490a1e065680d77383084d8dS3BucketF0537962": Object {
+      "Description": "S3 bucket for asset \\"70893b631249dc61260989e92e90d60ae94fbbec490a1e065680d77383084d8d\\"",
+      "Type": "String",
+    },
+    "AssetParameters70893b631249dc61260989e92e90d60ae94fbbec490a1e065680d77383084d8dS3VersionKey46386A78": Object {
+      "Description": "S3 key for asset version \\"70893b631249dc61260989e92e90d60ae94fbbec490a1e065680d77383084d8d\\"",
       "Type": "String",
     },
     "MagentoServiceCertArnParameterParameterAD41925C": Object {
@@ -128,7 +136,7 @@ Object {
       "Properties": Object {
         "Code": Object {
           "S3Bucket": Object {
-            "Ref": "AssetParameters11d371859e49f3b1a49896583254890801a40beada56e4c84409a179a221e2e2S3Bucket04AFB68D",
+            "Ref": "AssetParameters70893b631249dc61260989e92e90d60ae94fbbec490a1e065680d77383084d8dS3BucketF0537962",
           },
           "S3Key": Object {
             "Fn::Join": Array [
@@ -141,7 +149,7 @@ Object {
                       "Fn::Split": Array [
                         "||",
                         Object {
-                          "Ref": "AssetParameters11d371859e49f3b1a49896583254890801a40beada56e4c84409a179a221e2e2S3VersionKeyC247374B",
+                          "Ref": "AssetParameters70893b631249dc61260989e92e90d60ae94fbbec490a1e065680d77383084d8dS3VersionKey46386A78",
                         },
                       ],
                     },
@@ -154,7 +162,7 @@ Object {
                       "Fn::Split": Array [
                         "||",
                         Object {
-                          "Ref": "AssetParameters11d371859e49f3b1a49896583254890801a40beada56e4c84409a179a221e2e2S3VersionKeyC247374B",
+                          "Ref": "AssetParameters70893b631249dc61260989e92e90d60ae94fbbec490a1e065680d77383084d8dS3VersionKey46386A78",
                         },
                       ],
                     },
@@ -961,6 +969,111 @@ Object {
       },
       "Type": "AWS::EC2::SecurityGroupIngress",
     },
+    "ElasticacheSecurityGroup5E2118FC": Object {
+      "Properties": Object {
+        "GroupDescription": "Allow Redis port from ECS",
+        "SecurityGroupEgress": Array [
+          Object {
+            "CidrIp": "0.0.0.0/0",
+            "Description": "Allow all outbound traffic by default",
+            "IpProtocol": "-1",
+          },
+        ],
+        "VpcId": Object {
+          "Ref": "VPCB9E5F0B4",
+        },
+      },
+      "Type": "AWS::EC2::SecurityGroup",
+    },
+    "ElasticacheSecurityGroupfrommagentoserviceSecurityGroup6811311663798649101A": Object {
+      "Properties": Object {
+        "Description": "from magentoserviceSecurityGroup68113116:6379",
+        "FromPort": 6379,
+        "GroupId": Object {
+          "Fn::GetAtt": Array [
+            "ElasticacheSecurityGroup5E2118FC",
+            "GroupId",
+          ],
+        },
+        "IpProtocol": "tcp",
+        "SourceSecurityGroupId": Object {
+          "Fn::GetAtt": Array [
+            "serviceSecurityGroupED3E18CA",
+            "GroupId",
+          ],
+        },
+        "ToPort": 6379,
+      },
+      "Type": "AWS::EC2::SecurityGroupIngress",
+    },
+    "MagentoAuroraCluster576B8023": Object {
+      "DeletionPolicy": "Delete",
+      "Properties": Object {
+        "CopyTagsToSnapshot": true,
+        "DBClusterParameterGroupName": "default.aurora-mysql5.7",
+        "DBSubnetGroupName": Object {
+          "Ref": "MagentoAuroraClusterSubnets1D05994E",
+        },
+        "DatabaseName": "magento",
+        "Engine": "aurora-mysql",
+        "MasterUserPassword": Object {
+          "Fn::Join": Array [
+            "",
+            Array [
+              "{{resolve:secretsmanager:",
+              Object {
+                "Ref": "MagentoDatabasePassword6693C54A",
+              },
+              ":SecretString:::}}",
+            ],
+          ],
+        },
+        "MasterUsername": "magentouser",
+        "VpcSecurityGroupIds": Array [
+          Object {
+            "Fn::GetAtt": Array [
+              "magentoRDSSecurityGroup34C939E6",
+              "GroupId",
+            ],
+          },
+        ],
+      },
+      "Type": "AWS::RDS::DBCluster",
+      "UpdateReplacePolicy": "Delete",
+    },
+    "MagentoAuroraClusterInstance193B53C35": Object {
+      "DeletionPolicy": "Delete",
+      "DependsOn": Array [
+        "VPCPrivateSubnet1DefaultRouteAE1D6490",
+        "VPCPrivateSubnet2DefaultRouteF4F5CFD2",
+      ],
+      "Properties": Object {
+        "DBClusterIdentifier": Object {
+          "Ref": "MagentoAuroraCluster576B8023",
+        },
+        "DBInstanceClass": "db.t3.medium",
+        "DBSubnetGroupName": Object {
+          "Ref": "MagentoAuroraClusterSubnets1D05994E",
+        },
+        "Engine": "aurora-mysql",
+      },
+      "Type": "AWS::RDS::DBInstance",
+      "UpdateReplacePolicy": "Delete",
+    },
+    "MagentoAuroraClusterSubnets1D05994E": Object {
+      "Properties": Object {
+        "DBSubnetGroupDescription": "Subnets for MagentoAuroraCluster database",
+        "SubnetIds": Array [
+          Object {
+            "Ref": "VPCPrivateSubnet1Subnet8BCA10E0",
+          },
+          Object {
+            "Ref": "VPCPrivateSubnet2SubnetCFCDAA7A",
+          },
+        ],
+      },
+      "Type": "AWS::RDS::DBSubnetGroup",
+    },
     "MagentoDatabasePassword6693C54A": Object {
       "DeletionPolicy": "Delete",
       "Properties": Object {
@@ -1338,6 +1451,24 @@ Object {
                 "Value": "yes",
               },
               Object {
+                "Name": "MAGENTO_EXTRA_INSTALL_ARGS",
+                "Value": Object {
+                  "Fn::Join": Array [
+                    "",
+                    Array [
+                      "--cache-backend=redis --cache-backend-redis-server=",
+                      Object {
+                        "Fn::GetAtt": Array [
+                          "RedisCluster",
+                          "RedisEndpoint.Address",
+                        ],
+                      },
+                      " --cache-backend-redis-port=6379 --cache-backend-redis-db=0",
+                    ],
+                  ],
+                },
+              },
+              Object {
                 "Name": "MAGENTO_HOST",
                 "Value": "magento.magento.mydomain.com",
               },
@@ -1361,7 +1492,7 @@ Object {
                 "Name": "MAGENTO_DATABASE_HOST",
                 "Value": Object {
                   "Fn::GetAtt": Array [
-                    "ServerlessWordpressAuroraCluster5B0C9262",
+                    "MagentoAuroraCluster576B8023",
                     "Endpoint.Address",
                   ],
                 },
@@ -1409,18 +1540,7 @@ Object {
               },
             ],
             "Essential": true,
-            "Image": Object {
-              "Fn::Join": Array [
-                "",
-                Array [
-                  "1234567890.dkr.ecr.us-east-1.",
-                  Object {
-                    "Ref": "AWS::URLSuffix",
-                  },
-                  "/aws-cdk/assets:ea1cc7394cc3d087d4e1dab354d3bd815073052ccf2a8bf91d9fba5c50eb0925",
-                ],
-              ],
-            },
+            "Image": "bitnami/magento:latest",
             "LogConfiguration": Object {
               "LogDriver": "awslogs",
               "Options": Object {
@@ -1535,31 +1655,6 @@ Object {
       "Properties": Object {
         "PolicyDocument": Object {
           "Statement": Array [
-            Object {
-              "Action": Array [
-                "ecr:BatchCheckLayerAvailability",
-                "ecr:GetDownloadUrlForLayer",
-                "ecr:BatchGetImage",
-              ],
-              "Effect": "Allow",
-              "Resource": Object {
-                "Fn::Join": Array [
-                  "",
-                  Array [
-                    "arn:",
-                    Object {
-                      "Ref": "AWS::Partition",
-                    },
-                    ":ecr:us-east-1:1234567890:repository/aws-cdk/assets",
-                  ],
-                ],
-              },
-            },
-            Object {
-              "Action": "ecr:GetAuthorizationToken",
-              "Effect": "Allow",
-              "Resource": "*",
-            },
             Object {
               "Action": Array [
                 "logs:CreateLogStream",
@@ -1791,82 +1886,31 @@ Object {
       },
       "Type": "AWS::EC2::SecurityGroup",
     },
-    "ServerlessWordpressAuroraCluster5B0C9262": Object {
-      "DeletionPolicy": "Delete",
+    "RedisCluster": Object {
+      "DependsOn": Array [
+        "RedisClusterPrivateSubnetGroup",
+      ],
       "Properties": Object {
-        "CopyTagsToSnapshot": true,
-        "DBClusterParameterGroupName": "default.aurora-mysql5.7",
-        "DBSubnetGroupName": Object {
-          "Ref": "ServerlessWordpressAuroraClusterSubnets73189BF4",
-        },
-        "DatabaseName": "magento",
-        "Engine": "aurora-mysql",
-        "MasterUserPassword": Object {
-          "Fn::Join": Array [
-            "",
-            Array [
-              "{{resolve:secretsmanager:",
-              Object {
-                "Ref": "MagentoDatabasePassword6693C54A",
-              },
-              ":SecretString:::}}",
-            ],
-          ],
-        },
-        "MasterUsername": "magentouser",
+        "CacheNodeType": "cache.r5.large",
+        "CacheSubnetGroupName": "magento-cache",
+        "ClusterName": "magento-elasticache",
+        "Engine": "redis",
+        "NumCacheNodes": 1,
         "VpcSecurityGroupIds": Array [
           Object {
             "Fn::GetAtt": Array [
-              "wordpressRdsSecurityGroupB2FA9EAC",
+              "ElasticacheSecurityGroup5E2118FC",
               "GroupId",
             ],
           },
         ],
       },
-      "Type": "AWS::RDS::DBCluster",
-      "UpdateReplacePolicy": "Delete",
+      "Type": "AWS::ElastiCache::CacheCluster",
     },
-    "ServerlessWordpressAuroraClusterInstance130420D81": Object {
-      "DeletionPolicy": "Delete",
-      "DependsOn": Array [
-        "VPCPrivateSubnet1DefaultRouteAE1D6490",
-        "VPCPrivateSubnet2DefaultRouteF4F5CFD2",
-      ],
+    "RedisClusterPrivateSubnetGroup": Object {
       "Properties": Object {
-        "DBClusterIdentifier": Object {
-          "Ref": "ServerlessWordpressAuroraCluster5B0C9262",
-        },
-        "DBInstanceClass": "db.t3.medium",
-        "DBSubnetGroupName": Object {
-          "Ref": "ServerlessWordpressAuroraClusterSubnets73189BF4",
-        },
-        "Engine": "aurora-mysql",
-      },
-      "Type": "AWS::RDS::DBInstance",
-      "UpdateReplacePolicy": "Delete",
-    },
-    "ServerlessWordpressAuroraClusterInstance2B246CC03": Object {
-      "DeletionPolicy": "Delete",
-      "DependsOn": Array [
-        "VPCPrivateSubnet1DefaultRouteAE1D6490",
-        "VPCPrivateSubnet2DefaultRouteF4F5CFD2",
-      ],
-      "Properties": Object {
-        "DBClusterIdentifier": Object {
-          "Ref": "ServerlessWordpressAuroraCluster5B0C9262",
-        },
-        "DBInstanceClass": "db.t3.medium",
-        "DBSubnetGroupName": Object {
-          "Ref": "ServerlessWordpressAuroraClusterSubnets73189BF4",
-        },
-        "Engine": "aurora-mysql",
-      },
-      "Type": "AWS::RDS::DBInstance",
-      "UpdateReplacePolicy": "Delete",
-    },
-    "ServerlessWordpressAuroraClusterSubnets73189BF4": Object {
-      "Properties": Object {
-        "DBSubnetGroupDescription": "Subnets for ServerlessWordpressAuroraCluster database",
+        "CacheSubnetGroupName": "magento-cache",
+        "Description": "Private Subnet Group for Magento Elasticache",
         "SubnetIds": Array [
           Object {
             "Ref": "VPCPrivateSubnet1Subnet8BCA10E0",
@@ -1876,7 +1920,7 @@ Object {
           },
         ],
       },
-      "Type": "AWS::RDS::DBSubnetGroup",
+      "Type": "AWS::ElastiCache::SubnetGroup",
     },
     "VPCB9E5F0B4": Object {
       "Properties": Object {
@@ -2310,6 +2354,31 @@ Object {
       "Type": "AWS::SecretsManager::Secret",
       "UpdateReplacePolicy": "Delete",
     },
+    "magentoRDSSecurityGroup34C939E6": Object {
+      "Properties": Object {
+        "GroupDescription": "allow 3306 inbound",
+        "SecurityGroupEgress": Array [
+          Object {
+            "CidrIp": "0.0.0.0/0",
+            "Description": "Allow all outbound traffic by default",
+            "IpProtocol": "-1",
+          },
+        ],
+        "SecurityGroupIngress": Array [
+          Object {
+            "CidrIp": "0.0.0.0/0",
+            "Description": "allow 3306 inbound from lambda",
+            "FromPort": 3306,
+            "IpProtocol": "tcp",
+            "ToPort": 3306,
+          },
+        ],
+        "VpcId": Object {
+          "Ref": "VPCB9E5F0B4",
+        },
+      },
+      "Type": "AWS::EC2::SecurityGroup",
+    },
     "openSearchSecurityGroupDC64666B": Object {
       "Properties": Object {
         "GroupDescription": "allow All inbound",
@@ -2420,31 +2489,6 @@ Object {
         },
       },
       "Type": "AWS::EC2::SecurityGroupIngress",
-    },
-    "wordpressRdsSecurityGroupB2FA9EAC": Object {
-      "Properties": Object {
-        "GroupDescription": "allow 3306 inbound",
-        "SecurityGroupEgress": Array [
-          Object {
-            "CidrIp": "0.0.0.0/0",
-            "Description": "Allow all outbound traffic by default",
-            "IpProtocol": "-1",
-          },
-        ],
-        "SecurityGroupIngress": Array [
-          Object {
-            "CidrIp": "0.0.0.0/0",
-            "Description": "allow 3306 inbound from lambda",
-            "FromPort": 3306,
-            "IpProtocol": "tcp",
-            "ToPort": 3306,
-          },
-        ],
-        "VpcId": Object {
-          "Ref": "VPCB9E5F0B4",
-        },
-      },
-      "Type": "AWS::EC2::SecurityGroup",
     },
   },
 }

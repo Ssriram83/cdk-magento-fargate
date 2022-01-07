@@ -119,6 +119,11 @@
       "type": "runtime"
     },
     {
+      "name": "@aws-cdk/aws-elasticache",
+      "version": "^1.132.0",
+      "type": "runtime"
+    },
+    {
       "name": "@aws-cdk/aws-elasticloadbalancingv2",
       "version": "^1.132.0",
       "type": "runtime"

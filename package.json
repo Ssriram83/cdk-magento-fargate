@@ -47,6 +47,7 @@
     "@aws-cdk/aws-ecs": "^1.132.0",
     "@aws-cdk/aws-ecs-patterns": "^1.132.0",
     "@aws-cdk/aws-efs": "^1.132.0",
+    "@aws-cdk/aws-elasticache": "^1.132.0",
     "@aws-cdk/aws-elasticloadbalancingv2": "^1.132.0",
     "@aws-cdk/aws-iam": "^1.132.0",
     "@aws-cdk/aws-kms": "^1.132.0",
