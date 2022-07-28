@@ -1168,9 +1168,9 @@ concat-map@0.0.1:
   integrity sha512-/Srv4dswyQNBfohGpz9o6Yb3Gz3SrUDqBH5rTuhGR7ahtlbYKnVxw2bCFMRljaA7EXHaXZ8wsHdodFvbkhKmqg==
 
 constructs@^10.0.5:
-  version "10.0.50"
-  resolved "https://registry.npmjs.org/constructs/-/constructs-10.0.50.tgz"
-  integrity sha512-VD42/7n4arHVQO445+EHFb7GHmR2+NTt2xHjhbJg93bm2d8ixkRw39aSFdlNurd7DAcOekmXNSU47TM0G7wEmA==
+  version "10.1.59"
+  resolved "https://registry.yarnpkg.com/constructs/-/constructs-10.1.59.tgz#90cdd323143aef9c6660e0a77dbab4e3397922e4"
+  integrity sha512-dzU21oJthIjjFmEm07Mew1CNRseHrdIufbIEBSqa9x5qPtrqEJHl5Z8XstrPrb4jDQAJ8qwzG/XcOEAjOIwIrw==
 
 conventional-changelog-config-spec@^2.1.0:
   version "2.1.0"
